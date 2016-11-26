@@ -1,0 +1,29 @@
+-- Test Script --
+-- Omar Abdelghamy and Davin Birdi
+-- November 24, 2016
+
+
+-- From the Google Drive Document Omar and I made Nov 5
+-- To load to the Race-Capture, remove all new lines and tabs so that the entire code is condensed into one line and copy to a terminal program.
+
+-- LUA CODE --
+
+--Working Version:
+setTickRate(30)
+function onTick()
+  -- Initialized CAN Baud rate at 500kHz
+  initCAN(0,500000)
+  
+  -- Maps variables to incoming CAN data [note rxCAN function timeout parameter has been removed]
+  id, ext, data = rxCAN(0)
+  
+  -- Prints to the terminal window:
+  print(" ID: " ..id .." Ext: " ..ext)
+  println(" Data1: " ..data[1] .." Data2: " ..data[2] .." Data3: " ..data[3] .." Data4: " ..data[4] .." Data5: " ..data[5])
+end
+
+
+
+
+--Working Version (Condensed):
+setTickRate(30) function onTick() initCAN(0,500000) id, ext, data = rxCAN(0) print(" ID: " ..id .." Ext: " ..ext)  println(" Data1: " ..data[1] .." Data2: " ..data[2] .." Data3: " ..data[3] .." Data4: " ..data[4] .." Data5: " ..data[5]) end
