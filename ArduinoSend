@@ -1,0 +1,68 @@
+// Arduino C Code used to send a test message to the RaceCapture where it will then be able to display the data:
+
+// Goal:
+//    Basic Pattern to see on the RaceCapture Dash that we implemented working showing us we can parse incoming CAN messages.
+// Prereqs:
+//    Getting the RaceCapture to recieve data.
+//    Being familiar with the Arduino CAN Library.
+
+// *** Setup from the Test Arduino Script *****************************************************************************
+
+#include <CAN.h>
+#include <SPI.h> // required to resolve #define conflicts
+
+/* Define our CAN speed (bitrate) at 500 kiloHertz. */
+#define bitrate CAN_BPS_500K
+
+/* Global Variables */
+uint32_t extended_counter = 0;
+uint32_t standard_counter = 0;
+
+
+/* --- Setup Function Initializing Arduino --- */
+void setup() {
+ 
+  /* Initialize Serial communications with computer to use serial monitor */
+  Serial.begin(115200); 
+
+  /* Set CAN speed. Note: Speed is now 500kbit/s so adjust your CAN monitor */
+  CAN.begin(bitrate);
+
+  /* ARDUINO Output will be formatted as a CSV file, for capture and analysis */
+  // Serial.println(F("millis(),standard_counter,extended_counter"));
+}
+
+
+
+/* --- Create a function to load and send a standard frame message (we can also do an extended frame) --- */
+void standardMessage() {
+  // Create message object to use CAN message structure
+  CAN_Frame standard_message; 
+
+  // Random Standard Message ID
+  standard_message.id = 0x555; 
+  standard_message.valid = true;
+  standard_message.rtr = 0;
+  standard_message.extended = CAN_STANDARD_FRAME;
+  
+  // Data length
+  standard_message.length = 8; 
+
+  // counter in the first 4 bytes, timing in the last 4 bytes
+  uint32_t timehack = millis();
+
+  /* Load the data directly into CAN_Frame */
+  standard_message.data[0] = (standard_counter >> 24);
+  standard_message.data[1] = (standard_counter >> 16);
+  standard_message.data[2] = (standard_counter >> 8);
+  standard_message.data[3] = (standard_counter & 0xF);
+
+  CAN.write(standard_message); // Load message and send
+
+  if(standard_counter == 16777216)
+    standard_counter = 0;
+
+  
+  
+  standard_counter++; // increase count
+}
