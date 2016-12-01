@@ -10,10 +10,10 @@
 
 --Working Version:
 setTickRate(30)
+-- Initialized CAN Baud rate at 500kHz
+initCAN(0,500000)
+
 function onTick()
-  -- Initialized CAN Baud rate at 500kHz
-  initCAN(0,500000)
-  
   -- Maps variables to incoming CAN data [note rxCAN function timeout parameter has been removed]
   id, ext, data = rxCAN(0)
   
