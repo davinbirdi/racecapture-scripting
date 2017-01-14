@@ -1,0 +1,24 @@
+-- LuaScripting
+-- 
+-- Purpose: To Test sending RaceCapture messages to the Arduino
+-- Author: Omar Abdelghamy and Davin Birdi
+-- Date: January 14, 2017
+
+setTickRate(30)
+channel = 0
+initCAN(channel,500000)
+
+function onTick()
+
+  id = 1234
+  ext = 0
+  data = {11,22,33}
+  res = txCAN(channel, id, ext, data)
+
+  if res == 1 then
+    println("Success")
+  else
+    println("Failed")
+  end
+
+end
