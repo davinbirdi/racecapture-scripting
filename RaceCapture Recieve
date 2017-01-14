@@ -1,0 +1,40 @@
+-- Lua Scripting
+--
+-- Purpose: To receive incoming CAN messages from set IDs. 
+
+
+setTickRate(30)
+initCAN(0,500000) 
+channelId = addChannel("StdMessage" , 200, 2, 0, 255, "ints" )
+
+
+-- Print Data function to reduce clutter
+function printData()
+  println("ID: " ..id .." Data1: " ..data[1] .." Data2: " ..data[2] .." Data3: " ..data[3] .." Data4: " ..data[4] .." Data5: " ..data[5])
+
+  
+  --println("ID: " ..id .."Data0: " ..data[0] .." Data1: " ..data[1] .." Data2: " ..data[2] .." Data3: " --..data[3] .." Data4: " ..data[4] .." Data5: " ..data[5])
+end
+
+
+-- Main Program
+function onTick()
+  id, ext, data = rxCAN(0)
+
+  if id == 0x321 then
+   printData()
+   setChannel(channelID, data[3])
+   
+  elseif id == 0x7ff then
+    printData()
+  
+  -- Copy this format for every mapped channel
+  elseif id == 0xabc then
+    printData()
+  
+  
+  else
+    println("CAN Message not received")
+  end
+
+end
